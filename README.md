@@ -1,2 +1,4 @@
 # advent_of_code_2021
-Solutions for the advent of code 2021 in python
+My atempt to solve the advent of code 2021 callenge.
+
+This year I have choosen to do it in python digg a bit deeper into the standart library.
