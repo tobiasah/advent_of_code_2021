@@ -21,14 +21,11 @@ def read_distribution(filename: Path) -> list[int]:
         >>> read_distribution(Path("test_data/day_6.data"))
         [0, 1, 1, 2, 1, 0, 0, 0, 0]
     """
-    initial_values = []
-    initial_dist = [0] * 9
-    with filename.open("r") as file:
-        initial_values = file.read().split(",")
-    for value in initial_values:
-        initial_dist[int(value)] += 1
-    return initial_dist
-
+    data = [int(s) for s in filename.open("r").read().split(",")]
+    stats = [0] * 9
+    for object in data:
+        stats[object] += 1
+    return stats
 
 def progress_population(
     days: int, distribution: list[int], respawn_offset: int = 6
@@ -52,40 +49,26 @@ def progress_population(
 
     Examples:
         >>> progress_population(1, [0,1])
-        [1, 0, 0, 0, 0, 0, 0, 0]
+        [1, 0, 0, 0, 0, 0, 0]
         >>> progress_population(1, [0,1], respawn_offset = 1)
-        [1, 0, 0]
+        [1, 0]
         >>> progress_population(2, [0,1])
-        [0, 0, 0, 0, 0, 0, 1, 1]
+        [0, 0, 0, 0, 0, 0, 2]
         >>> progress_population(2, [0,1], respawn_offset = 1)
-        [0, 1, 1]
+        [0, 2]
         >>> progress_population(3, [0,1,0,0,0,0,0,0])
         [0, 0, 0, 0, 0, 1, 1, 0]
         >>> sum(progress_population(256, [0,1,1,2,1,0,0,0,0]))
         26984457539
     """
-    offset = 0
-    new_fish = 0
-    max_spawn = len(distribution)
-    if max_spawn <= respawn_offset + 1:
-        distribution += [0] * (respawn_offset - max_spawn + 2)
-        max_spawn = respawn_offset + 2
-
-    for i in range(days):
-        # resetted fish
-        reset_offset = (offset + respawn_offset + 1) % max_spawn
-        distribution[reset_offset] += distribution[offset]
-        distribution[offset] = 0
-        # new fish
-        distribution[offset] += new_fish
-        # progress
-        offset = (offset + 1) % max_spawn
-        new_fish = distribution[offset]
-
-    new_dist = [0] * max_spawn
-    for i in range(max_spawn):
-        new_dist[i] = distribution[(offset + i) % max_spawn]
-    return new_dist
+    # resize distrubution if the respwan offset is larger than the distribution
+    if len(distribution) < respawn_offset + 1:
+        distribution += [0] * (respawn_offset - len(distribution) + 1)
+    for _ in range(days):
+        num = distribution[0]
+        distribution = distribution[1:] + [num]
+        distribution[respawn_offset] += num
+    return distribution
 
 
 @click.group()
