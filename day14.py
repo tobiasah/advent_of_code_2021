@@ -83,9 +83,9 @@ def get_puzzel_answer(connection_counter, poly_template) -> int:
 
 @click.group()
 def main():
-    """CLI for the solution of day 13
+    """CLI for the solution of day 14
 
-    Advent of code 2021 (https://adventofcode.com/2021/day/13)
+    Advent of code 2021 (https://adventofcode.com/2021/day/14)
     """
 
 
